@@ -1,0 +1,84 @@
+{
+  "QueryLanguage": "JSONPath",
+  "Comment": "A description of my state machine",
+  "StartAt": "StartCrawler",
+  "States": {
+    "StartCrawler": {
+      "Type": "Task",
+      "Parameters": {
+        "Name": "flights-data-crawler"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:startCrawler",
+      "Next": "GetCrawler"
+    },
+    "GetCrawler": {
+      "Type": "Task",
+      "Parameters": {
+        "Name": "flights-data-crawler"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:glue:getCrawler",
+      "Next": "is_running?"
+    },
+    "is_running?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.Crawler.State",
+          "StringMatches": "RUNNING",
+          "Next": "Wait"
+        }
+      ],
+      "Default": "Glue StartJobRun"
+    },
+    "Wait": {
+      "Type": "Wait",
+      "Seconds": 5,
+      "Next": "GetCrawler"
+    },
+    "Glue StartJobRun": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "skyways_data_ingestion_2"
+      },
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.TaskFailed"
+          ],
+          "Next": "Failed_notification"
+        }
+      ],
+      "Next": "Glue_job_status"
+    },
+    "Glue_job_status": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Next": "Success_notification",
+          "Variable": "$.JobRunState",
+          "StringMatches": "SUCCEEDED"
+        }
+      ],
+      "Default": "Failed_notification"
+    },
+    "Success_notification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "arn:aws:sns:us-east-1:651706776121:skyways_sns_email"
+      },
+      "End": true
+    },
+    "Failed_notification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:us-east-1:651706776121:skyways_sns_email",
+        "Message.$": "$"
+      },
+      "End": true
+    }
+  }
+}

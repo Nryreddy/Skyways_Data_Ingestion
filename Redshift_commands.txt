@@ -1,0 +1,29 @@
+create schema skyways;
+
+CREATE TABLE skyways.airports_dim (
+    airport_id BIGINT,
+    city VARCHAR(100),
+    state VARCHAR(100),
+    name VARCHAR(200)
+);
+
+COPY skyways.airports_dim
+FROM 's3://skyways-dataset-gds/airports.csv' 
+IAM_ROLE 'arn:aws:iam::1111:role/service-role/AmazonRedshift-CommandsAccessRole-000'
+DELIMITER ','
+IGNOREHEADER 1
+REGION 'us-east-1';
+
+--------------
+
+CREATE TABLE skyways.daily_flights_fact (
+    carrier VARCHAR(10),
+    dep_airport VARCHAR(200),
+    arr_airport VARCHAR(200),
+    dep_city VARCHAR(100),
+    arr_city VARCHAR(100),
+    dep_state VARCHAR(100),
+    arr_state VARCHAR(100),
+    dep_delay BIGINT,
+    arr_delay BIGINT
+);
