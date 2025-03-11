@@ -50,7 +50,7 @@ We will set up a **Glue ETL Pipeline** called `"skyways_data_ingestion"`, where:
 
 
 ### 5️⃣ Create State Machine using Step Functions  
-We will create an **AWS Step Function** to orchestrate the ETL workflow, ensuring:
+We will create an **AWS Step Function** to orchestrate the ETL workflow.
 
 ![alt text](images/Capture_stepfunc.PNG)
 
@@ -59,4 +59,23 @@ we will create an Event Rule "skyways-data-pipeline-step-function" Which will tr
 
 ![alt text](images/Capture_event_bridge.PNG)
 
-  
+### 7️⃣ Create an SNS Topic for Notifications  
+We will create an **SNS Topic** named `"skyways_sns_email"`, subscribed to an email address to receive job completion alerts.
+
+![alt text](images/Capture_SNS_email_sub.PNG)
+
+### 8️⃣ Upload Input Flight Data  
+Once all components are set up, we will upload input flight data to **S3**, which will trigger the ingestion pipeline.
+- **Successful State Machine Run**
+
+![alt text](images/Capture_step_success.PNG)
+
+
+### Output
+
+- we can see the **Success** Notification in your subscribed email inbox.
+
+
+![alt text](images/Capture_email_succ_notification.PNG)
+
+![alt text](images/Capture_output_redshift_fact_table.PNG)
