@@ -79,3 +79,7 @@ Once all components are set up, we will upload input flight data to **S3**, whic
 ![alt text](images/Capture_email_succ_notification.PNG)
 
 ![alt text](images/Capture_output_redshift_fact_table.PNG)
+
+![alt text](images/Capture_avg_dep_delay.PNG)
+
+![alt text](images/Capture_chart.PNG)
