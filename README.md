@@ -4,7 +4,8 @@
 The Skyways Data Ingestion project aims to automate the ingestion of daily flights transactional data into a **Redshift data warehouse** using **AWS services**. The process begins with data landing in an **S3 bucket**, which triggers a series of **ETL operations** orchestrated by **Step Functions**, initiated through an **EventBridge rule**. AWS **Glue** is utilized for data extraction, transformation, and loading (ETL), ensuring clean and structured data is available in Redshift for analytics and reporting.
 
 ## 🏗️ Architecture  
-![alt text](images/skyways.drawio.png)
+![alt text](images/skyways_v2.drawio.png)
+
 1. **Amazon S3** – Storage for raw flight data.  
 2. **AWS EventBridge** – Triggers workflow when new data arrives.  
 3. **AWS Step Functions** – Orchestrates the data pipeline execution.  
